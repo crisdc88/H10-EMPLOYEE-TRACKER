@@ -17,7 +17,6 @@ primary key(id),
 foreign key (department_id) references department(id)
 );
 
-
 create table employee(
 	id integer not null auto_increment,
     first_name varchar(30),

@@ -101,7 +101,7 @@ let Employee = require("./classes/Employee");
                 let temObj = {value:element.id, name:element.name}; 
                 result.push(temObj);               
             });
-            console.log("list department result",result)
+            // console.log("list department result",result)
             cb(result)
         })
     }

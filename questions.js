@@ -63,7 +63,7 @@ function viewTables(answer) {
 
     switch (answer) {
         case "View All tables":
-            console.log("here at view all");
+            // console.log("here at view all");
 
             queries.selectDepartment(function () {
 
@@ -115,7 +115,7 @@ function insertRecord(answer) {
         case "Role":
             // get choices
             queries.selectListDepartments(function (deptNames) {
-                // console.log("deparments:  ", deptNames);
+                console.log("deparments:  ", deptNames);
                 roleInsert(deptNames);
             })
             break;
@@ -163,22 +163,17 @@ function updateEmployeeRole() {
     
             inquirer.prompt(qUpdateRole).then(function (answer) {
     
-                console.log("responses update role employee",answer.employeeId, answer.roleId )
+                // console.log("responses update role employee",answer.employeeId, answer.roleId )
                 queries.updateEmployeeRole(answer.roleId, answer.employeeId, function(){
                     // show table
                     // call main menu
                     queries.selectEmployee(function () {
                         init(qStart);
                     });
+
                 })
             })
-
-
-
-
-        })
-
-        
+        }) 
     })
 };
 
@@ -192,7 +187,6 @@ function deptInsert() {
             message: "Enter Department Name",
         }
     ]
-
 
     inquirer.prompt(qDepartmentInfo).then(function (answer) {
         queries.insertData("department", { name: answer.deptName }, function () {
@@ -222,15 +216,12 @@ function roleInsert(deptNames) {
             message: "Choose the department",
             choices: deptNames
         }
-
-
     ]
 
     inquirer.prompt(qRole).then(function (answer) {
         console.log("choice of department  :", answer.department)
 
-        queries.insertData("role", { title: answer.title, salary: answer.salary, department_id: answer }, function () {
-
+        queries.insertData("role", { title: answer.title, salary: answer.salary, department_id: answer.department }, function () {
             queries.selectRole(function () {
                 init(qStart);
             });
@@ -270,12 +261,12 @@ function employeeInsert(roles, managers) {
             type: "list",
             message: "Choose a manager",
             choices: managers,
-            when: answer => answer.start === "View tables"
-
+            when: answer => answer.asign === "YES"
         }
     ]
 
     inquirer.prompt(qEmployee).then(function (answer) {
+       
         let manager;
         if (answer.asign === "YES") {
             manager = answer.manager;
@@ -284,7 +275,6 @@ function employeeInsert(roles, managers) {
         }
 
         queries.insertData("employee", { first_name: answer.firstName, last_name: answer.lastName, role_id: answer.role, manager_id: manager }, function () {
-
             queries.selectEmployee(function () {
                 init(qStart);
             });
