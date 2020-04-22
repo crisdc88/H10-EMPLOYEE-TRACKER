@@ -253,7 +253,7 @@ function employeeInsert(roles, managers) {
         {
             name: "asign",
             type: "list",
-            message: "Do you want to asing a Manager?",
+            message: "Do you want to assign a Manager?",
             choices: ["YES", "NO"]
         },
         {
