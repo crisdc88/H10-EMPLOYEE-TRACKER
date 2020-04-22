@@ -143,19 +143,42 @@ function updateEmployeeRole() {
     // get role list
     queries.selectListRoles(function (roleTitle) {
         
-        qUpdateRole = [
-            {
-                name: "viewTables",
-                type: "list",
-                message: "what would you like View",
-                choices: roleTitle
+        queries.selectListEmployee(function(employees){
 
-            }
-        ]
 
-        inquirer.prompt(qUpdateRole).then(function (answer) {
-            
+            qUpdateRole = [
+                {
+                    name: "employeeId",
+                    type: "list",
+                    message: "Select Employee",
+                    choices: employees
+                },
+                {
+                    name: "roleId",
+                    type: "list",
+                    message: "Select new role",
+                    choices: roleTitle
+                }
+            ]
+    
+            inquirer.prompt(qUpdateRole).then(function (answer) {
+    
+                console.log("responses update role employee",answer.employeeId, answer.roleId )
+                queries.updateEmployeeRole(answer.roleId, answer.employeeId, function(){
+                    // show table
+                    // call main menu
+                    queries.selectEmployee(function () {
+                        init(qStart);
+                    });
+                })
+            })
+
+
+
+
         })
+
+        
     })
 };
 

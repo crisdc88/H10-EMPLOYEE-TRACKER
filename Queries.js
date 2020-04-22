@@ -146,7 +146,25 @@ let Employee = require("./classes/Employee");
             let result = [];
             let temObj;
             if (err) throw err;
-            console.log(resp)
+            // console.log(resp)
+            resp.map(element => {
+                temObj = {value:element.id, name:`${element.first_name}  ${element.last_name}`}; 
+                result.push(temObj);               
+            });
+            // console.log(result)
+            cb(result);
+        })
+    }
+
+    selectListEmployee(cb) {
+        
+        let query = `Select id, first_name, last_name from  employee `;
+        
+        connection.query(query, function (err, resp) {
+            let result = [];
+            let temObj;
+            if (err) throw err;
+            // console.log(resp)
             resp.map(element => {
                 temObj = {value:element.id, name:`${element.first_name}  ${element.last_name}`}; 
                 result.push(temObj);               
@@ -176,16 +194,31 @@ let Employee = require("./classes/Employee");
         })
     }
 
+    
+    
+    updateEmployeeRole(newValue, condValue, cb) {
+    
+        let query = "UPDATE employee set ? where ?";
+        connection.query(query, [{ role_id: newValue }, { id:condValue }], function (err, resp) {
+            if (err) throw err;
+            // console.log(resp)
+            cb();
+        })
+    }
+    
+    
     updateData(table, coltoupdate, newValue, colcondition, condValue) {
         let result = [];
         let query = "UPDATE " + table + " set ? where?";
         connection.query(query, [{ [coltoupdate]: newValue }, { [colcondition]: condValue }], function (err, resp) {
             if (err) throw err;
-            console.log(resp)
+            // console.log(resp)
         })
     }
-    close() {
-        connection.close();
+
+
+    close(){
+        connection.end();
     }
 
 }
