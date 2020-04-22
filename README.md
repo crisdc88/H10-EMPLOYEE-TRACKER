@@ -23,10 +23,11 @@ Project Location
 
 >To run this application on your local machine follow these steps:
 >1. Clone project from github.
->2. Open the terminal and go to the project's path
->3. run npm install
->4. run node questions.js
->5. Choose Options
+>2. Copy sql statements found in ct_DB.sql and run the statements on your mySQL application.
+>3. Open the terminal and go to the project's path
+>4. run npm install
+>5. run node questions.js
+>6. Choose Options
 
 
 ## Deployed Link
