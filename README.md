@@ -1,21 +1,91 @@
 # H10-EMPLOYEE-TRACKER
 
-* The command-line application should allow users to:
+This application will allow you to have an Employee Management System and track information about your employees. 
 
-  * Add departments OK, roles OK, employees ok
+## GettingStarted
 
-  * View departments, roles, employees OK
+Project Location
 
-  * Update employee roles
+>[Project's GitHub repository](https://github.com/crisdc88/H10-EMPLOYEE-TRACKER)
 
-## Bonus
+## Prerequisites
 
-* The command-line application should allow users to:
+>mySql Database Engine
 
-  * Update employee managers
+## Built With
 
-  * View employees by manager
+>* Node js
+>* mySql
+>* cli-table package
+>* Inquirer package
 
-  * Delete departments, roles, and employees
+## Installation
 
-  * View the total utilized budget of a department -- ie the combined salaries of all employees in that department
+>To run this application on your local machine follow these steps:
+>1. Clone project from github.
+>2. Open the terminal and go to the project's path
+>3. run npm install
+>4. run node questions.js
+>5. Choose Options
+
+
+## Deployed Link
+
+>N/A
+
+## Code-Snippets
+
+
+```sh
+"sample of a query used to insert, this function was so I could insert information to any table:"
+
+  insertData(table, objectValues, cb) {
+       
+        let query = `INSERT INTO ${table}  SET ?`;
+        connection.query(query, objectValues, function (err, resp) {
+            if (err) throw err;
+            // console.log(resp)
+        })
+        cb();
+    }
+
+"use of Call back functions:"
+
+ inquirer.prompt(qDepartmentInfo).then(function (answer) {
+        queries.insertData("department", { name: answer.deptName }, function () {
+            queries.selectDepartment(function () {
+                init(qStart);
+            });
+        })
+    })
+
+"implemented "value" functionality so I could pass an array of object to the attribute 'choice' on the inquirer.  This way the user will see a string of data and the inquirer will return whatever was assinged to the attribute value, for this case it will return an id. "
+
+            resp.map(element => {
+                temObj = {value:element.id, name:`${element.first_name}  ${element.last_name}`}; 
+                result.push(temObj);               
+            });
+ 
+
+```
+
+## Screen shots
+
+1. Console Input
+![consoleInput](./ss.png)
+
+
+## Author
+
+<img src="https://avatars.githubusercontent.com/u/61372364?" alt="avatar" style="border-radius:20px" width="30"/>
+
+D. Cristina Terry
+
+GitHub: [https://github.com/crisdc88/](https://github.com/crisdc88/),
+
+LinkedIn: [www.linkedin.com/in/dcristinaterry](www.linkedin.com/in/dcristinaterry)
+
+## License
+
+![license](https://img.shields.io/badge/license-MIT-green)
+
