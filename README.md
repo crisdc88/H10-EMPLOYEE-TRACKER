@@ -1,9 +1,8 @@
 # H10-EMPLOYEE-TRACKER
 
-
 * The command-line application should allow users to:
 
-  * Add departments OK, roles OK, employees
+  * Add departments OK, roles OK, employees ok
 
   * View departments, roles, employees OK
 

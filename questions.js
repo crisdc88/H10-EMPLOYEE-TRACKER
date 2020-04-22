@@ -10,7 +10,7 @@ const qStart = [
         name: "start",
         type: "list",
         message: "What would you like to do",
-        choices: ["View tables", "Update a record", "Add a record", "Delete a record", "Exit"]
+        choices: ["View tables", "Add a record", "Update employee roles", "Exit"]
     },
     {
         name: "viewTables",
@@ -25,7 +25,8 @@ const qStart = [
         message: "Where would you like insert record",
         choices: ["Department", "Role", "Employee", "Start Over", "Exit"],
         when: answer => answer.start === "Add a record"
-    }
+    },
+
 ]
 
 
@@ -38,6 +39,9 @@ function init(qStart) {
             if (answer.start === "Exit") {
                 queries.close();
             }
+            if (answer.start === "Update employee roles") {
+                updateEmployeeRole();
+            }
         }
 
         if (answer.viewTables !== undefined) {
@@ -49,89 +53,11 @@ function init(qStart) {
             let answerInsert = answer.insertTables.toString();
             insertRecord(answerInsert);
         }
+
+
     })
 };
 
-
-function deptInsert() {
-
-    var qDepartmentInfo = [
-        {
-            name: "deptName",
-            type: "input",
-            message: "Enter Department Name",
-        }
-    ]
-    
-
-    inquirer.prompt(qDepartmentInfo).then(function (answer) {
-        queries.insertData("department", {name : answer.deptName}, function(){
-            init(qStart);
-        })
-    })
-}
-
-function roleInsert(deptNames){
-   
-    const qRole = [
-        {
-            name: "title",
-            type: "input",
-            message: "Enter role Title",
-        },
-        {
-            name: "salary",
-            type: "input",
-            message: "Enter role Salary",
-        }, 
-        {
-            name: "department",
-            type: "list",
-            message: "Choose the department",
-            choices: deptNames
-        }
-     
-
-    ]
-
-    inquirer.prompt(qRole).then(function (answer) {
-
-        // get dept id
-        queries.selectDepartmenID(answer.department,function(id){
-            // insert
-            // console.log ("this ID", id)
-            queries.insertData("role", {title : answer.title, salary: answer.salary, department_id: id.id}, function(){
-                init(qStart);
-            })
-        })
-    })
-}
-
-
-function insertRecord(answer) {
-
-    switch (answer) {
-
-        case "Department":
-            deptInsert();
-            break;
-        case "Role":
-        // get choices
-        queries.selectColumnBy("department", "name", function(deptNames){
-            console.log("deparments:  ", deptNames);
-            roleInsert(deptNames);
-           
-        })
-        break;
-        case "Employee":
-        case "Start Over":
-        case "Exit":
-            break;
-
-    }
-
-
-}
 
 function viewTables(answer) {
 
@@ -171,7 +97,6 @@ function viewTables(answer) {
             init(qStart)
             break;
         case "Exit":
-            queries.close();
             break;
 
     }
@@ -180,32 +105,169 @@ function viewTables(answer) {
 
 
 
+function insertRecord(answer) {
+
+    switch (answer) {
+
+        case "Department":
+            deptInsert();
+            break;
+        case "Role":
+            // get choices
+            queries.selectListDepartments(function (deptNames) {
+                // console.log("deparments:  ", deptNames);
+                roleInsert(deptNames);
+            })
+            break;
+        case "Employee":
+
+            // get choices title
+            queries.selectListRoles(function (roleTitle) {
+                // console.log("deparments:  ", roleTitle);
+                // get list administrators
+                queries.selectListManagers(function (administrators) {
+                    // console.log(administrators);
+                    employeeInsert(roleTitle, administrators);
+                })
+            })
+        // get choices managers
+
+        case "Start Over":
+        case "Exit":
+            break;
+
+    }
+}
+
+function updateEmployeeRole() {
+    // get role list
+    queries.selectListRoles(function (roleTitle) {
+        
+        qUpdateRole = [
+            {
+                name: "viewTables",
+                type: "list",
+                message: "what would you like View",
+                choices: roleTitle
+
+            }
+        ]
+
+        inquirer.prompt(qUpdateRole).then(function (answer) {
+            
+        })
+    })
+};
+
+
+function deptInsert() {
+
+    var qDepartmentInfo = [
+        {
+            name: "deptName",
+            type: "input",
+            message: "Enter Department Name",
+        }
+    ]
+
+
+    inquirer.prompt(qDepartmentInfo).then(function (answer) {
+        queries.insertData("department", { name: answer.deptName }, function () {
+            queries.selectDepartment(function () {
+                init(qStart);
+            });
+        })
+    })
+}
+
+function roleInsert(deptNames) {
+
+    const qRole = [
+        {
+            name: "title",
+            type: "input",
+            message: "Enter role Title",
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "Enter role Salary",
+        },
+        {
+            name: "department",
+            type: "list",
+            message: "Choose the department",
+            choices: deptNames
+        }
+
+
+    ]
+
+    inquirer.prompt(qRole).then(function (answer) {
+        console.log("choice of department  :", answer.department)
+
+        queries.insertData("role", { title: answer.title, salary: answer.salary, department_id: answer }, function () {
+
+            queries.selectRole(function () {
+                init(qStart);
+            });
+        })
+
+    })
+}
+
+function employeeInsert(roles, managers) {
+
+
+    var qEmployee = [
+        {
+            name: "firstName",
+            type: "input",
+            message: "Enter employee Name",
+        },
+        {
+            name: "lastName",
+            type: "input",
+            message: "Enter employee Last Name",
+        },
+        {
+            name: "role",
+            type: "list",
+            message: "Choose Role",
+            choices: roles
+        },
+        {
+            name: "asign",
+            type: "list",
+            message: "Do you want to asing a Manager?",
+            choices: ["YES", "NO"]
+        },
+        {
+            name: "manager",
+            type: "list",
+            message: "Choose a manager",
+            choices: managers,
+            when: answer => answer.start === "View tables"
+
+        }
+    ]
+
+    inquirer.prompt(qEmployee).then(function (answer) {
+        let manager;
+        if (answer.asign === "YES") {
+            manager = answer.manager;
+        } else {
+            manager = null;
+        }
+
+        queries.insertData("employee", { first_name: answer.firstName, last_name: answer.lastName, role_id: answer.role, manager_id: manager }, function () {
+
+            queries.selectEmployee(function () {
+                init(qStart);
+            });
+        })
+    })
+}
+
 
 init(qStart);
-
-// queries.selectDepartment(function(arrDept){
-//     console.log(arrDept);
-// });
-
-// queries.selectRole(function(){});
-
-
-
-
-// async function start(){
-//     arrDept=[]
-//     try{
-//         arrDpt= await queries.selectDepartment()
-//         console.log("inside try")
-
-
-//     }
-//     catch(err){
-//         console.log("inside catch")
-//         throw err
-//     }
-
-// console.log("please print: ", arrDept);
-
-// }
-// start()

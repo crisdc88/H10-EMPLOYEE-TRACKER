@@ -6,7 +6,7 @@ let Role = require("./classes/Role.js");
 let Employee = require("./classes/Employee");
 
 
-class Queries {
+ class  Queries{
 
     selectDepartment(cb) {
         let query = "select * from department";
@@ -88,16 +88,20 @@ class Queries {
     }
 
 
-    selectColumnBy(tableName, column, cb) {
-        let result = [];
-        let query = `Select ${column} from  ${tableName}`;
+    selectListDepartments(cb) {
+        
+        let query = `Select id, name from  department`;
+        
         connection.query(query, function (err, resp) {
+            let result = [];
             if (err) throw err;
-            // console.log(resp)
-            resp.forEach(element => {
-                result.push(element.name);
+            //  console.log(resp)
+           
+            resp.map(element => {
+                let temObj = {value:element.id, name:element.name}; 
+                result.push(temObj);               
             });
-
+            console.log("list department result",result)
             cb(result)
         })
     }
@@ -107,14 +111,50 @@ class Queries {
         let query = `Select id from department where name=?`;
         connection.query(query, name, function (err, resp) {
             if (err) throw err;
-            // console.log(resp)
+            resp.map(element => {
+                let temObj = {value:element.id, name:element.name}; 
+                result.push(temObj);               
+            });
+            
             cb(resp);
         })
     }
 
+    selectListRoles(cb) {
+        
+        let query = `Select id, title from role`;
+        
+        connection.query(query, function (err, resp) {
+            let result = [];
+            if (err) throw err;
+            // console.log(resp)
+           
+            resp.map(element => {
+                let temObj = {value:element.id, name:element.title}; 
+                result.push(temObj);               
+            });
+            // console.log(result)
+            cb(result)
+        })
+    }
 
-
-    // selectDepartmentBy("department", "name", "accounting");
+    selectListManagers(cb) {
+        
+        let query = `Select id, first_name, last_name from  employee where manager_id is not null `;
+        
+        connection.query(query, function (err, resp) {
+            let result = [];
+            let temObj;
+            if (err) throw err;
+            console.log(resp)
+            resp.map(element => {
+                temObj = {value:element.id, name:`${element.first_name}  ${element.last_name}`}; 
+                result.push(temObj);               
+            });
+            // console.log(result)
+            cb(result);
+        })
+    }
 
     insertData(table, objectValues, cb) {
        
