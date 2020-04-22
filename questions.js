@@ -97,6 +97,7 @@ function viewTables(answer) {
             init(qStart)
             break;
         case "Exit":
+            queries.close();
             break;
 
     }
@@ -133,7 +134,10 @@ function insertRecord(answer) {
         // get choices managers
 
         case "Start Over":
+            init(qStart)
+            break;
         case "Exit":
+            queries.close();
             break;
 
     }
