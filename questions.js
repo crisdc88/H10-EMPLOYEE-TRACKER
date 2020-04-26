@@ -132,7 +132,7 @@ function insertRecord(answer) {
                 })
             })
         // get choices managers
-
+            break;
         case "Start Over":
             init(qStart)
             break;
