@@ -140,7 +140,7 @@ let Employee = require("./classes/Employee");
 
     selectListManagers(cb) {
         
-        let query = `Select id, first_name, last_name from  employee where manager_id is not null `;
+        let query = `Select id, first_name, last_name from  employee `;
         
         connection.query(query, function (err, resp) {
             let result = [];

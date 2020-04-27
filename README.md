@@ -22,6 +22,7 @@ Project Location
 ## Installation
 
 >To run this application on your local machine follow these steps:
+
 >1. Clone project from github.
 >2. Copy sql statements found in ct_DB.sql and run the statements on your mySQL application.
 >3. Open the terminal and go to the project's path
@@ -70,11 +71,13 @@ Project Location
 
 ```
 
-## Screen shots
+## Screen shots / GIFS
 
 1. Console Input
 ![consoleInput](./ss.png)
 
+2. Screen Shot
+![consoleInput](./addEmployeeSS.gif)
 
 ## Author
 
